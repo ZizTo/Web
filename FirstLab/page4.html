@@ -1,26 +1,30 @@
 <!DOCTYPE html>
-<html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Страница 4</title>
     <style>
         table {
             width: 80%;
-            margin: 20px auto;
+            margin-left: 10%;
             border-collapse: collapse;
         }
         th, td {
-            border: 1px solid #333;
+            border: 1px solid;
             padding: 10px;
             text-align: center;
         }
         th {
             background-color: #e0e0e0;
         }
+        .thrd{
+            background-color: purple;
+        }
     </style>
 </head>
 <body>
     <table>
+        <caption> Крутая таблица </caption>
         <thead>
             <tr>
                 <th>Название товара</th>
@@ -32,16 +36,16 @@
             <tr>
                 <td>Cвечи зажигания</td>
                 <td rowspan="2">1000 руб</td>
-                <td>170</td>
+                <td class="thrd">170</td>
             </tr>
             <tr>
                 <td>Аккумулятор</td>
-                <td>8</td>
+                <td class="thrd">8</td>
             </tr>
             <tr>
                 <td>Шина</td>
                 <td>80 руб</td>
-                <td>1</td>
+                <td class="thrd">1</td>
             </tr>
         </tbody>
     </table>
