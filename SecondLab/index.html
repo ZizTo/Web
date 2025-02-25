@@ -3,12 +3,39 @@
 <head>
     <title>Магазин автозапчастей - табличная вёрстка</title>
     <style>
-        body { margin: 0; font-family: Arial; }
-        table { width: 100%; border-collapse: collapse; }
-        .header { background: #333; color: white; padding: 20px; }
-        .menu { width: 200px; background: #f0f0f0; vertical-align: top; padding: 10px; }
-        .content { padding: 10px; }
-        .footer { background: #333; color: white; text-align: center; padding: 10px; }
+        body { 
+            margin: 0; 
+            font-family: Arial; 
+            height: 100vh; /* Высота body равна высоте экрана */
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            height: 100%; /* Таблица занимает всю высоту body */
+        }
+        .header { 
+            background: #333; 
+            color: white; 
+            padding: 20px; 
+        }
+        .menu { 
+            width: 200px; 
+            background: #f0f0f0; 
+            vertical-align: top; 
+            padding: 10px; 
+        }
+        .content { 
+            padding: 10px; 
+        }
+        .footer { 
+            background: #333; 
+            color: white; 
+            text-align: center; 
+            padding: 10px; 
+        }
+        tr.content-row { 
+            height: 100%; /* Растягиваем строку на всю доступную высоту */
+        }
     </style>
 </head>
 <body>
@@ -18,7 +45,7 @@
                 <h1>Магазин автозапчастей "АвтоДеталь"</h1>
             </td>
         </tr>
-        <tr>
+        <tr class="content-row">
             <td class="menu">
                 <h3>Меню</h3>
                 <ul>
