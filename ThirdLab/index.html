@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Магазин автозапчастей</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="container">
@@ -15,14 +16,10 @@
             <nav class="menu">
                 <h2>Меню:</h2>
                 <ul>
-                    <li><a href="#home">Главная</a></li>
-                    <li><a href="#catalog">Каталог</a></li>
-                    <li><a href="#delivery">Доставка</a></li>
-                    <li><a href="#contacts">Контакты</a></li>
-                    <li><a href="#discounts">Акции</a></li>
-                    <li><a href="#reviews">Отзывы</a></li>
-                    <li><a href="#partners">Партнёры</a></li>
-                    <li><a href="#faq">FAQ</a></li>
+                    <li><input onclick="addPart();" value="Новая запчасти" type="button"></li>
+                    <li><input onclick="deletePart();" value="Удаление запчасти" type="button"></li>
+                    <li><input onclick="getPartInfo();" value="Информация о запчасти" type="button"></li>
+                    <li><input onclick="listAllParts();" value="Все запчасти" type="button"></li>
                 </ul>
             </nav>
             <section class="content">
@@ -32,7 +29,7 @@
             </section>
         </div>
         <footer>
-            <p>ГЛАВНОЕ НЕ ПОБЕДА, А УЧАСТИЕ!</p>
+            <p>Притормози и тормоза купи</p>
         </footer>
     </div>
 </body>
