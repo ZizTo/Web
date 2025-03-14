@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sign in</title>
+</head>
+<body>
+	<form id="Form"></form>
+
+	<script type="text/javascript">
+		const FormA = [
+    		{ label: 'login:', elemtype: 'text1line', name: 'login', width: 200 },
+    		{ label: 'password:', elemtype: 'password1line', name: 'password' },
+    		{ label: 'Agree with Terms And Services:', elemtype: 'check', name: 'agree' },
+    		{ elemtype: 'button', value: 'Send' }
+		];
+
+		const form = document.getElementById("Form");
+		var ul = document.createElement("ul");
+
+		const ValidationRules = {
+			'login': {
+				'required': {
+					'v': true,
+					'message': 'Login is required',
+				},
+				'minS': {
+					'v': 3,
+					'message': 'Minimum of symbols in login is 3',
+				},
+				'spaceNotAllowed': {
+					'v': true,
+					'message': 'Space is not allowed in login',
+				}
+			},
+			'password': {
+				'required': {
+					'v': false,
+					'message': 'Password is required',
+				},
+				'minS': {
+					'v': 5,
+					'message': 'Minimum of symbols in password is 5',
+				},
+				'spaceNotAllowed': {
+					'v': true,
+					'message': 'Space is not allowed in password',
+				}
+			},
+			'agree': {
+				'required': {
+					'v': true,
+					'message': 'Agree with Terms and Services is required',
+				}
+			}
+		};
+
+		function displayError(element, message) {
+            let errorSpan = element.nextElementSibling;
+            if (!errorSpan || !errorSpan.classList.contains('error-message')) {
+                errorSpan = document.createElement('span');
+                errorSpan.className = 'error-message';
+                element.parentNode.insertBefore(errorSpan, element.nextSibling);
+            }
+            errorSpan.style.color = 'red';
+            errorSpan.textContent = message;
+            element.style.borderColor = 'red';
+        }	
+
+         function clearError(element) {
+            const errorSpan = element.nextElementSibling;
+            if (errorSpan && errorSpan.classList.contains('error-message')) {
+                errorSpan.remove();
+            }
+            element.style.borderColor = '';
+        }
+
+		function Validation() {
+			let allGood = true;
+			try {			
+				Array.from(form.elements).forEach(item => {
+					console.log(item.name);
+					if (!ValidationRules[item.name]) { clearError(item); return; }
+
+					if (ValidationRules[item.name]['required']['v'] && (!item.value && !item.checked)) { 
+						displayError(item, ValidationRules[item.name]['required']['message']);
+						allGood = false;
+						return;
+					} 
+					if (!ValidationRules[item.name]['required']['v'] && (!item.value && !item.checked)) { clearError(item); return; } 
+					if (ValidationRules[item.name]['minS'] && item.value.length < ValidationRules[item.name]['minS']['v'] ) { 
+						displayError(item, ValidationRules[item.name]['minS']['message']);
+						allGood = false;
+						return;
+					} 
+					if (ValidationRules[item.name]['spaceNotAllowed'] && ValidationRules[item.name]['spaceNotAllowed']['v'] && item.value.indexOf(' ') != -1)
+					{ 
+						displayError(item, ValidationRules[item.name]['spaceNotAllowed']['message']);
+						allGood = false;
+						return;
+					} 
+					clearError(item);
+				});
+			}
+			catch (e) {
+				displayError(form, e.message);
+				return false;
+			}
+
+			return allGood;
+		}
+
+		FormA.forEach( item => {
+			let li = document.createElement("li");
+
+			if (item.label) { 
+				let label = document.createElement("label");
+				label.textContent = item.label;
+				li.appendChild(label); 
+			}
+
+			let el;
+			switch (item.elemtype) {
+			case "text1line":
+				el = document.createElement("input");
+				el.type = "text";
+				el.name = item.name;
+				break;
+			case "password1line":
+				el = document.createElement("input");
+				el.type = "password";
+				el.name = item.name;
+				break;
+			case "check":
+				el = document.createElement("input");
+				el.type = "checkbox";
+				el.name = item.name;
+				el.value = "";
+				break;
+			case "button":
+				el = document.createElement("button");
+				el.name = item.name;
+				el.textContent = item.value;
+				el.type = "submit";
+				break;
+			default:
+				el = document.createElement("input");
+                break;
+			}
+			if(item.width) { el.style.width = `${item.width}px`; }
+			li.appendChild(el);
+
+			ul.appendChild(li);
+		});
+
+		form.appendChild(ul);
+
+		form.addEventListener('submit', (e) => { 
+			e.preventDefault(); 
+			if (Validation()) { clearError(form); alert("All good!!!"); } 
+		});
+
+	</script>
+</body>
+</html>
