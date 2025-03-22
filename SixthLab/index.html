@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Динамическое меню</title>
+    <style>
+        html, body { height: 100%; }
+
+        .nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav {
+            position: relative;
+            padding: 8px;
+            background: #f0f0f0;
+        }
+
+        .sub-menu {
+            display: none; 
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 200px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sub-menu li {
+            position: relative;
+            padding: 8px;
+            background: #f0f0f0;
+        }
+
+        .mainul li {
+            padding: 8px;
+            background: #f0f0f0;
+        }
+
+        /*.nav:hover > .sub-menu {
+            display: block;
+        }*/
+
+        .nav:not(:hover) > .sub-menu {
+            display: none;
+        }
+
+
+
+        .sub-menu .sub-menu {
+            left: 100%;
+            top: 0;
+            margin-left: 0px;
+        }
+
+        .mainul {
+            display: flex;
+        }
+
+        li {
+            list-style: none;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="nav" id="mainnav"></nav>
+
+    <script type="text/javascript">
+        const mainnav = document.getElementById("mainnav");
+        var mainul = document.createElement("ul");
+        mainul.classList.add("mainul");
+        mainnav.appendChild(mainul);
+
+        function ShowMenu(MenuItems, ParentElem) {
+            Array.from(ParentElem.children).forEach(item => {
+                const submenu = item.querySelector('.sub-menu');
+                if (submenu) {
+                    submenu.style.display = "none";
+                }
+            });
+
+            if (MenuItems) {
+                MenuItems.style.display = "block";
+            }   
+        } 
+
+        function LibToFile(lib, ulel) {
+            lib.forEach(item => { 
+                let liel = document.createElement("li");
+                if(item.submenu) {
+                    let span = document.createElement("span");
+                    span.classList.add("nav-title");
+                    span.textContent = item.name;
+                    let ul = document.createElement("ul");
+                    ul.classList.add("sub-menu");
+                    LibToFile(item.submenu, ul);
+                    liel.appendChild(span);
+                    liel.appendChild(ul);
+                    liel.classList.add("nav");
+
+                    liel.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        ShowMenu(ul, ulel);
+                    });
+                } 
+                else if (item.url) {
+                    let a = document.createElement("a");
+                    a.href = item.url;
+                    a.textContent = item.name;
+                    liel.appendChild(a);
+                }
+                ulel.appendChild(liel);
+            });
+        }
+
+        const mainLib = [
+            {
+                name:'Пункт 1',
+                submenu: 
+                    [ 
+                        {name: 'Пункт 1.1', submenu: 
+                            [ 
+                                {name:'Пункт 1.1.1', url: 'http://www.av.by'},
+                                {name:'Пункт 1.1.2 длинный', url: 'http://www.av.by'}
+                            ] 
+                        }, 
+                        {name:'Пункт 1.2', url: 'http://www.av.by'}, 
+                        {
+                            name:'Пункт 1.3 длинный', 
+                            submenu: 
+                                [ 
+                                    {name:'Пункт 1.3.1', url: 'http://www.av.by'},
+                                    {name:'Пункт 1.3.2', url: 'http://www.av.by'},
+                                    {
+                                        name:'Пункт 1.3 длинный', 
+                                        submenu: 
+                                            [ 
+                                                {name:'Пункт 1.3.1', url: 'http://www.av.by'},
+                                                {name:'Пункт 1.3.2', url: 'http://www.av.by'},
+                                                {name:'Пункт 1.3.3', url: 'http://www.av.by'},
+                                                {name:'Пункт 1.3.4 длинный', url: 'http://www.av.by'} 
+                                            ]
+                                    },
+                                    {name:'Пункт 1.3.4 длинный', url: 'http://www.av.by'} 
+                                ]
+                        } 
+                    ] 
+            }, 
+            {name: 'Пункт 2 длинный', url: 'http://www.av.by'}, 
+            {
+                name:'Пункт 3', 
+                submenu: 
+                    [ 
+                        {name:'Пункт 3.1 длинный', url: 'http://www.av.by'}, 
+                        {name:'Пункт 3.2', url: 'http://www.av.by'} 
+                    ] 
+            } 
+        ];    
+
+        document.body.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ShowMenu(null, mainnav);
+        });
+
+        LibToFile(mainLib, mainul);
+
+    </script>
+</body>
+</html>

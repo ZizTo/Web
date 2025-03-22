@@ -13,6 +13,7 @@
     		{ label: 'login:', elemtype: 'text1line', name: 'login', width: 200 },
     		{ label: 'password:', elemtype: 'password1line', name: 'password' },
     		{ label: 'Agree with Terms And Services:', elemtype: 'check', name: 'agree' },
+    		{ label: 'Модель машины:', elemtype: 'text1line', name: 'model', width: 200 },
     		{ elemtype: 'button', value: 'Send' }
 		];
 
@@ -53,6 +54,22 @@
 					'v': true,
 					'message': 'Agree with Terms and Services is required',
 				}
+			},
+			'model': {
+				'required': {
+					'v': false,
+					'message': 'Model is required',
+				},
+				'minS': {
+					'v': 3,
+					'message': 'Minimum of symbols in model is 3',
+				},
+			},
+			'desc': {
+				'required': {
+					'v': true,
+					'message': 'Agree with Terms and Services is required',
+				}
 			}
 		};
 
@@ -76,31 +93,33 @@
             element.style.borderColor = '';
         }
 
-		function Validation() {
-			let allGood = true;
-			try {			
-				Array.from(form.elements).forEach(item => {
-					console.log(item.name);
-					if (!ValidationRules[item.name]) { clearError(item); return; }
+        function ElValidation(item) {
+        	console.log(item.name);
+					if (!ValidationRules[item.name]) { clearError(item); return true; }
 
 					if (ValidationRules[item.name]['required']['v'] && (!item.value && !item.checked)) { 
 						displayError(item, ValidationRules[item.name]['required']['message']);
-						allGood = false;
-						return;
+						return false;
 					} 
-					if (!ValidationRules[item.name]['required']['v'] && (!item.value && !item.checked)) { clearError(item); return; } 
+					if (!ValidationRules[item.name]['required']['v'] && (!item.value && !item.checked)) { clearError(item); return true; } 
 					if (ValidationRules[item.name]['minS'] && item.value.length < ValidationRules[item.name]['minS']['v'] ) { 
 						displayError(item, ValidationRules[item.name]['minS']['message']);
-						allGood = false;
-						return;
+						return false;
 					} 
 					if (ValidationRules[item.name]['spaceNotAllowed'] && ValidationRules[item.name]['spaceNotAllowed']['v'] && item.value.indexOf(' ') != -1)
 					{ 
 						displayError(item, ValidationRules[item.name]['spaceNotAllowed']['message']);
-						allGood = false;
-						return;
+						return false;
 					} 
 					clearError(item);
+					return true;
+        }
+
+		function Validation() {
+			let allGood = true;
+			try {			
+				Array.from(form.elements).forEach(item => {
+					if (!ElValidation(item)) { allGood = false};
 				});
 			}
 			catch (e) {
@@ -126,17 +145,26 @@
 				el = document.createElement("input");
 				el.type = "text";
 				el.name = item.name;
+				el.addEventListener('input', () => ElValidation(el));
+				break;
+			case "textMOREline":
+				el = document.createElement("input");
+				el.type = "textarea";
+				el.name = item.name;
+				el.addEventListener('input', () => ElValidation(el));
 				break;
 			case "password1line":
 				el = document.createElement("input");
 				el.type = "password";
 				el.name = item.name;
+				el.addEventListener('input', () => ElValidation(el));
 				break;
 			case "check":
 				el = document.createElement("input");
 				el.type = "checkbox";
 				el.name = item.name;
 				el.value = "";
+				el.addEventListener('input', () => ElValidation(el));
 				break;
 			case "button":
 				el = document.createElement("button");
@@ -149,6 +177,7 @@
                 break;
 			}
 			if(item.width) { el.style.width = `${item.width}px`; }
+			if(item.height) { el.style.height = `${item.height}px`; }
 			li.appendChild(el);
 
 			ul.appendChild(li);
