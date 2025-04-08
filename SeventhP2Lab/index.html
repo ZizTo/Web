@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoParts Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #83039c;
+        }
+
+        nav button {
+            background-color: #a74caf;
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .container {
+            padding-left: 10%;
+            padding-right: 10%;
+            padding-top:  20px;
+            padding-bottom: 20px;
+        }
+
+        .name {
+            text-align: center;
+        }
+
+        .products-grid {
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: rgb(255, 191, 241);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .price {
+            color: #4CAF50;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+
+        #content {
+            min-height: 300px;
+        }
+
+        .loader {
+            text-align: center;
+            margin: 50px auto;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <button onclick="loadPage('home')">Главная</button>
+            <button onclick="loadPage('products')">Каталог запчастей</button>
+        </div>
+    </nav>
+
+    <div id="content" class="container">
+        <div class="loader">Загрузка содержимого...</div>
+    </div>
+
+    <script>
+        const products = [
+            { 
+                name: 'Масляный фильтр',
+                price: 1500,
+                description: 'Высококачественный масляный фильтр для бензиновых двигателей',
+            },
+            {
+                name: 'Тормозные колодки',
+                price: 4500,
+                description: 'Керамические тормозные колодки премиум-класса',
+            },
+            {
+                name: 'Амортизатор',
+                price: 6800,
+                description: 'Газовый амортизатор для легковых автомобилей',
+            }
+        ];
+
+        function loadPage(pageName) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '<div class="loader">Загрузка содержимого...</div>';
+            
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', `http://localhost:3000/${pageName}`);
+
+            /*xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        contentDiv.innerHTML = xhr.responseText;
+                        
+                        if (pageName === 'products.html') {
+                            renderProducts();
+                        }
+                    } else {
+                        contentDiv.innerHTML = `<div class="container">
+                            <h2>Ошибка загру страницы</h2>
+                            <p>Не удалось загрузить страницу ${pageName}. Код ошибки: ${xhr.status}</p>
+                        </div>`;
+                    }
+                }
+            };*/
+
+            xhr.onload = () => {
+    if (xhr.status == 200) {                // если код ответа 200
+        console.log(xhr.responseText);      // выводим полученный ответ на консоль браузера
+    } else {                                // иначе выводим текст статуса
+        console.log("Server response: ", xhr.statusText);
+    }
+};
+            
+            xhr.send();
+        }
+
+        function renderProducts(filterCategory = 'all') {
+            const productsHTML = products.map(product => `
+                <div class="product-card">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p class="price">${product.price} BYN</p>
+                    <button>Купить</button>
+                </div>
+            `).join('');
+            
+            const productsList = document.getElementById('products-list');
+            if (productsList) {
+                productsList.innerHTML = productsHTML;
+            }
+        }
+
+        // Загрузить главную страницу при первом открытии сайта
+        window.onload = function() {
+            loadPage('home.html');
+        };
+    </script>
+</body>
+</html>

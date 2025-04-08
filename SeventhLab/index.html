@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoParts Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #83039c;
+        }
+
+        nav button {
+            background-color: #a74caf;
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .container {
+            padding-left: 10%;
+            padding-right: 10%;
+            padding-top:  20px;
+            padding-bottom: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active-page {
+            display: block;
+        }
+
+        .name {
+            text-align: center;
+        }
+
+        .products-grid {
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: rgb(255, 191, 241);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .price {
+            color: #4CAF50;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <button onclick="showHome()">Главная</button>
+            <button onclick="showProducts()">Каталог запчастей</button>
+        </div>
+    </nav>
+
+    <div id="home" class="page active-page">
+        <div class="container">
+            <div class="name">
+                <h1>Добро пожаловать в AutoParts Store</h1>
+                <p>Лучший выбор автозапчастей по доступным ценам</p>
+            </div>
+            <h2>О нашем магазине</h2>
+            <p>Мы предлагаем:</p>
+            <ul>
+                <li>Более 10 000 наименований запчастей</li>
+                <li>Оригинальные и совместимые детали</li>
+                <li>Быстрая доставка по всей стране</li>
+                <li>Профессиональные консультации</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="products" class="page">
+        <div class="container">
+            <h2>Каталог запчастей</h2>
+            <div class="products-grid" id="products-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { 
+                name: 'Масляный фильтр',
+                price: 1500,
+                description: 'Высококачественный масляный фильтр для бензиновых двигателей',
+            },
+            {
+                name: 'Тормозные колодки',
+                price: 4500,
+                description: 'Керамические тормозные колодки премиум-класса',
+            },
+            {
+                name: 'Амортизатор',
+                price: 6800,
+                description: 'Газовый амортизатор для легковых автомобилей',
+            }
+        ];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+        }
+
+        function showHome() {
+            showPage('home');
+        }
+
+        function showProducts() {
+            showPage('products');
+            renderProducts();
+        }
+
+        function renderProducts(filterCategory = 'all') {
+            const productsHTML = products.map(product => `
+                <div class="product-card">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p class="price">${product.price} BYN</p>
+                    <button>Купить</button>
+                </div>
+            `).join('');
+            document.getElementById('products-list').innerHTML = productsHTML;
+        }
+    </script>
+</body>
+</html>
