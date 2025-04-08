@@ -75,7 +75,7 @@
     </div>
 
     <script>
-        const products = [
+        /*const products = [
             { 
                 name: 'Масляный фильтр',
                 price: 1500,
@@ -91,7 +91,7 @@
                 price: 6800,
                 description: 'Газовый амортизатор для легковых автомобилей',
             }
-        ];
+        ];*/
 
         function loadPage(pageName) {
             const contentDiv = document.getElementById('content');
@@ -101,35 +101,23 @@
 
             xhr.open('GET', `http://localhost:3000/${pageName}`);
 
-            /*xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        contentDiv.innerHTML = xhr.responseText;
-                        
-                        if (pageName === 'products.html') {
-                            renderProducts();
-                        }
-                    } else {
-                        contentDiv.innerHTML = `<div class="container">
-                            <h2>Ошибка загру страницы</h2>
-                            <p>Не удалось загрузить страницу ${pageName}. Код ошибки: ${xhr.status}</p>
-                        </div>`;
-                    }
-                }
-            };*/
-
             xhr.onload = () => {
-    if (xhr.status == 200) {                // если код ответа 200
-        console.log(xhr.responseText);      // выводим полученный ответ на консоль браузера
-    } else {                                // иначе выводим текст статуса
-        console.log("Server response: ", xhr.statusText);
-    }
-};
-            
+                if (xhr.status == 200) {                // если код ответа 200
+                    console.log(xhr.responseText);
+                    document.getElementById('content').innerHTML = xhr.responseText;
+                    
+                    // Если это страница продуктов, вызываем renderProducts
+                    if (pageName === 'products') {
+                        NewRenderProducts();
+                    }    // выводим полученный ответ на консоль браузера
+                } else {                                // иначе выводим текст статуса
+                    console.log("Server response: ", xhr.statusText);
+                }
+            };
             xhr.send();
         }
 
-        function renderProducts(filterCategory = 'all') {
+        /*function renderProducts() {
             const productsHTML = products.map(product => `
                 <div class="product-card">
                     <h3>${product.name}</h3>
@@ -143,11 +131,43 @@
             if (productsList) {
                 productsList.innerHTML = productsHTML;
             }
+        }*/
+
+        function NewRenderProducts() {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', `http://localhost:3000/productsStore`);
+
+            xhr.responseType = 'json'; 
+
+            xhr.onload = () => {
+                if (xhr.status == 200) {   
+                    const products = xhr.response;             // если код ответа 200
+                    //console.log(xhr.responseText);
+                    const productsHTML = products.map(product => `
+                        <div class="product-card">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <p class="price">${product.price} BYN</p>
+                            <button>Купить</button>
+                        </div>
+                    `).join('');
+            
+                    const productsList = document.getElementById('products-list');
+                    if (productsList) {
+                        productsList.innerHTML = productsHTML;
+                    }
+                } else {                                // иначе выводим текст статуса
+                    console.log("Server response: ", xhr.statusText);
+                }
+            };
+
+            xhr.send();
         }
 
         // Загрузить главную страницу при первом открытии сайта
         window.onload = function() {
-            loadPage('home.html');
+            loadPage('home');
         };
     </script>
 </body>
