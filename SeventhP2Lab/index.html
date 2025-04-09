@@ -102,15 +102,14 @@
             xhr.open('GET', `http://localhost:3000/${pageName}`);
 
             xhr.onload = () => {
-                if (xhr.status == 200) {                // если код ответа 200
+                if (xhr.status == 200) {
                     console.log(xhr.responseText);
                     document.getElementById('content').innerHTML = xhr.responseText;
                     
-                    // Если это страница продуктов, вызываем renderProducts
                     if (pageName === 'products') {
                         NewRenderProducts();
-                    }    // выводим полученный ответ на консоль браузера
-                } else {                                // иначе выводим текст статуса
+                    }
+                } else {
                     console.log("Server response: ", xhr.statusText);
                 }
             };
@@ -142,8 +141,7 @@
 
             xhr.onload = () => {
                 if (xhr.status == 200) {   
-                    const products = xhr.response;             // если код ответа 200
-                    //console.log(xhr.responseText);
+                    const products = xhr.response;
                     const productsHTML = products.map(product => `
                         <div class="product-card">
                             <h3>${product.name}</h3>
@@ -157,7 +155,7 @@
                     if (productsList) {
                         productsList.innerHTML = productsHTML;
                     }
-                } else {                                // иначе выводим текст статуса
+                } else {
                     console.log("Server response: ", xhr.statusText);
                 }
             };
@@ -165,7 +163,6 @@
             xhr.send();
         }
 
-        // Загрузить главную страницу при первом открытии сайта
         window.onload = function() {
             loadPage('home');
         };

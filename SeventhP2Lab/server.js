@@ -6,7 +6,7 @@ http.createServer((request, response) => {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "GET");
 
-    console.log(`Запрос: ${request.url}`); // Логирование запроса
+    console.log(`Запрос: ${request.url}`);
 
     let filePath;
     if (request.url === "/home") {
@@ -24,17 +24,17 @@ http.createServer((request, response) => {
         return;
     }
 
-    console.log("Пытаюсь прочитать файл:", filePath); // Логирование пути
+    console.log("Пытаюсь прочитать файл:", filePath);
 
     fs.readFile(filePath, "utf8", (err, data) => {
         if (err) {
-            console.error("Ошибка чтения файла:", err.message); // Подробное сообщение об ошибке
+            console.error("Ошибка чтения файла:", err.message);
             response.writeHead(404);
             response.end("Файл не найден");
             return;
         }
 
-        console.log("Файл успешно прочитан"); // Убедимся, что данные получены
+        console.log("Файл успешно прочитан");
         console.log("data: ");
         console.log(data);  
         response.end(data);
