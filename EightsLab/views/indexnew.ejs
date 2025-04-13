@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title><%= title %></title>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <button onclick="showHome()">Главная</button>
+            <button onclick="showProducts()">Каталог запчастей</button>
+        </div>
+    </nav>
+
+    <div id="home" class="page active-page">
+        <div class="container">
+            <div class="name">
+                <h1>Добро пожаловать в AutoParts Store</h1>
+                <p>Лучший выбор автозапчастей по доступным ценам</p>
+            </div>
+            <h2>О нашем магазине</h2>
+            <p>Мы предлагаем:</p>
+            <ul>
+                <li>Более 10 000 наименований запчастей</li>
+                <li>Оригинальные и совместимые детали</li>
+                <li>Быстрая доставка по всей стране</li>
+                <li>Профессиональные консультации</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="products" class="page">
+        <div class="container">
+            <h2>Каталог запчастей</h2>
+
+            <form action="/items" method="POST">
+                <input type="text" name="name" placeholder="Название">
+                <input type="text" name="description" placeholder="Описание">
+                <input type="number" name="price" placeholder="Цена">
+                <button type="submit">Добавить</button>
+            </form>
+
+            <div class="products-grid" id="products-list">
+                <% items.forEach(item => { %>
+                    <div class="product-card">
+                        <h3><%= item.name %></h3>
+                        <p><%= item.description %></p>
+                        <p class="price"><%= item.price %> BYN</p>
+                        <button>Купить</button>
+                        <form action="/items/<%= item.id %>?_method=PUT" method="POST">
+                            <input type="text" name="name" placeholder="Новое название">
+                            <input type="text" name="description" placeholder="Новое описание">
+                            <input type="number" name="price" placeholder="Новая цена">
+                            <button type="submit">Обновить</button>
+                        </form>
+                        <form action="/items/<%= item.id %>?_method=DELETE" method="POST">
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </div>
+                <% }); %>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>    
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+        }
+
+        function showHome() {
+            showPage('home');
+        }
+
+        function showProducts() {
+            showPage('products');
+        }
+    </script>
+</body>
+</html>
