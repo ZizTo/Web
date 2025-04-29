@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <h1><%= title %></h1>
+    
+    <!-- Форма для добавления записи -->
+    <form action="/items" method="POST">
+        <input type="text" name="name" placeholder="Название" required>
+        <input type="text" name="care" placeholder="Описание ухода" required>
+        <button type="submit">Добавить</button>
+    </form>
+
+    <!-- Список записей -->
+    <ul>
+        <% items.forEach(item => { %>
+            <li>
+                <div>
+                    <h3><%= item.name %></h3>
+                    <p><%= item.care %></p>
+                </div>
+                
+                <!-- Форма для удаления -->
+                <form action="/items/<%= item.id %>?_method=DELETE" method="POST">
+                    <button type="submit">Удалить</button>
+                </form>
+
+                <!-- Форма для обновления -->
+                <form action="/items/<%= item.id %>?_method=PUT" method="POST">
+                    <input type="text" name="name" placeholder="Новое название">
+                    <input type="text" name="care" placeholder="Новое описание">
+                    <button type="submit">Обновить</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+</body>
+</html>

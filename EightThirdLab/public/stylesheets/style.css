@@ -1,0 +1,264 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+nav {
+  background-color: #83039c;
+}
+
+nav button {
+  background-color: #a74caf;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+nav button:hover {
+  background-color: #6d0382;
+}
+
+.container {
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page {
+  display: none;
+}
+
+.active-page {
+  display: block;
+}
+
+.name {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.name h1 {
+  color: #83039c;
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #333;
+  margin: 20px 0;
+  border-bottom: 2px solid #83039c;
+  padding-bottom: 10px;
+}
+
+.products-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background: rgb(255, 232, 251);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.product-card h3 {
+  color: #83039c;
+  margin-bottom: 10px;
+}
+
+.price {
+  color: #4CAF50;
+  font-weight: bold;
+  padding: 10px 0;
+  font-size: 1.2em;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+}
+
+button {
+  background-color: #83039c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #6d0382;
+}
+
+form {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+form > * {
+  flex: 1 1 200px;
+}
+
+form button {
+  flex: 0 0 auto;
+}
+
+ul {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pagination a, .pagination span {
+  padding: 8px 16px;
+  margin: 0 4px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #f1f1f1;
+}
+
+.pagination .active {
+  background-color: #83039c;
+  color: white;
+  border-color: #83039c;
+}
+
+.pagination .disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Controls for search and sort */
+.controls {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 250px;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sort-button {
+  background: #83039c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.sort-button:hover {
+  background: #6d0382;
+}
+
+.sort-button.active {
+  background: #a74caf;
+}
+
+.search-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px;
+  min-width: 150px;
+}
+
+.search-button, .reset-button {
+  padding: 8px 16px;
+  background: #83039c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover, .reset-button:hover {
+  background: #6d0382;
+}
+
+.reset-button {
+  background: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .sort-controls {
+    justify-content: center;
+  }
+}

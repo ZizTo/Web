@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title><%= title %></title>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .pagination a, .pagination span {
+            padding: 8px 16px;
+            margin: 0 4px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .pagination .active {
+            background-color: #83039c;
+            color: white;
+            border-color: #83039c;
+        }
+        
+        .pagination .disabled {
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+        
+        .search-box {
+            flex: 1;
+        }
+        
+        .sort-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sort-button {
+            background: #83039c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        
+        .sort-button.active {
+            background: #a74caf;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 8px;
+        }
+        
+        .search-button, .reset-button {
+            padding: 8px 16px;
+            background: #83039c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .reset-button {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <button onclick="showHome()">Главная</button>
+            <button onclick="showProducts()">Каталог запчастей</button>
+        </div>
+    </nav>
+
+    <div id="home" class="page active-page">
+        <div class="container">
+            <div class="name">
+                <h1>Добро пожаловать в AutoParts Store</h1>
+                <p>Лучший выбор автозапчастей по доступным ценам</p>
+            </div>
+            <h2>О нашем магазине</h2>
+            <p>Мы предлагаем:</p>
+            <ul>
+                <li>Более 10 000 наименований запчастей</li>
+                <li>Оригинальные и совместимые детали</li>
+                <li>Быстрая доставка по всей стране</li>
+                <li>Профессиональные консультации</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="products" class="page">
+        <div class="container">
+            <h2>Каталог запчастей</h2>
+            
+            <!-- Форма поиска и сортировки -->
+            <div class="controls">
+                <div class="search-box">
+                    <form action="/" method="GET" class="search-form">
+                        <input type="hidden" name="page" value="1">
+                        <% if (typeof query !== 'undefined' && query.sort) { %>
+                            <input type="hidden" name="sort" value="<%= query.sort %>">
+                        <% } %>
+                        <% if (typeof query !== 'undefined' && query.sortDir) { %>
+                            <input type="hidden" name="sortDir" value="<%= query.sortDir %>">
+                        <% } %>
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Поиск по названию" 
+                            class="search-input"
+                            value="<%= typeof query !== 'undefined' && query.search ? query.search : '' %>"
+                        >
+                        <button type="submit" class="search-button">Поиск</button>
+                        <% if (typeof query !== 'undefined' && query.search) { %>
+                            <a href="/?page=1<%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>" class="reset-button">Сбросить</a>
+                        <% } %>
+                    </form>
+                </div>
+                
+                <div class="sort-controls">
+                    <span>Сортировка: </span>
+                    <a href="/?page=1<%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %>&sort=name&sortDir=asc" 
+                       class="sort-button <%= typeof query !== 'undefined' && query.sort === 'name' && query.sortDir === 'asc' ? 'active' : '' %>">
+                        По имени ↑
+                    </a>
+                    <a href="/?page=1<%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %>&sort=name&sortDir=desc" 
+                       class="sort-button <%= typeof query !== 'undefined' && query.sort === 'name' && query.sortDir === 'desc' ? 'active' : '' %>">
+                        По имени ↓
+                    </a>
+                </div>
+            </div>
+
+            <!-- Форма добавления новой запчасти -->
+            <form action="/items<%= typeof pagination !== 'undefined' ? '?page=' + pagination.page : '' %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>" method="POST">
+                <input type="text" name="name" placeholder="Название" required>
+                <input type="text" name="description" placeholder="Описание" required>
+                <input type="number" name="price" placeholder="Цена" required>
+                <button type="submit">Добавить</button>
+            </form>
+
+            <!-- Список запчастей -->
+            <div class="products-grid" id="products-list">
+                <% if (items.length === 0) { %>
+                    <p>Запчасти не найдены</p>
+                <% } else { %>
+                    <% items.forEach(item => { %>
+                        <div class="product-card">
+                            <h3><%= item.name %></h3>
+                            <p><%= item.description %></p>
+                            <p class="price"><%= item.price %> BYN</p>
+                            <button>Купить</button>
+                            
+                            <!-- Форма обновления запчасти -->
+                            <form action="/items/<%= item.id %>?_method=PUT<%= typeof pagination !== 'undefined' ? '&page=' + pagination.page : '' %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>" method="POST">
+                                <input type="text" name="name" placeholder="Новое название">
+                                <input type="text" name="description" placeholder="Новое описание">
+                                <input type="number" name="price" placeholder="Новая цена">
+                                <button type="submit">Обновить</button>
+                            </form>
+                            
+                            <!-- Форма удаления запчасти -->
+                            <form action="/items/<%= item.id %>?_method=DELETE<%= typeof pagination !== 'undefined' ? '&page=' + pagination.page : '' %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>" method="POST">
+                                <button type="submit">Удалить</button>
+                            </form>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+            
+            <!-- Пагинация -->
+            <% if (typeof pagination !== 'undefined' && pagination.totalPages > 1) { %>
+                <div class="pagination">
+                    <% if (pagination.page > 1) { %>
+                        <a href="/?page=1<%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>">«</a>
+                        <a href="/?page=<%= pagination.page - 1 %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>">‹</a>
+                    <% } else { %>
+                        <span class="disabled">«</span>
+                        <span class="disabled">‹</span>
+                    <% } %>
+                    
+                    <% 
+                    let startPage = Math.max(1, pagination.page - 2);
+                    let endPage = Math.min(pagination.totalPages, startPage + 4);
+                    
+                    if (endPage - startPage < 4 && startPage > 1) {
+                        startPage = Math.max(1, endPage - 4);
+                    }
+                    
+                    for (let i = startPage; i <= endPage; i++) { %>
+                        <% if (i === pagination.page) { %>
+                            <span class="active"><%= i %></span>
+                        <% } else { %>
+                            <a href="/?page=<%= i %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>"><%= i %></a>
+                        <% } %>
+                    <% } %>
+                    
+                    <% if (pagination.page < pagination.totalPages) { %>
+                        <a href="/?page=<%= pagination.page + 1 %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>">›</a>
+                        <a href="/?page=<%= pagination.totalPages %><%= typeof query !== 'undefined' && query.search ? '&search=' + query.search : '' %><%= typeof query !== 'undefined' && query.sort ? '&sort=' + query.sort : '' %><%= typeof query !== 'undefined' && query.sortDir ? '&sortDir=' + query.sortDir : '' %>">»</a>
+                    <% } else { %>
+                        <span class="disabled">›</span>
+                        <span class="disabled">»</span>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script>    
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+        }
+
+        function showHome() {
+            showPage('home');
+        }
+
+        function showProducts() {
+            showPage('products');
+            
+            // If we have a search or sort query, make sure to show the products page
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('search') || urlParams.has('sort') || urlParams.has('page')) {
+                showPage('products');
+            }
+        }
+        
+        // Check for query parameters and show products page if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('search') || urlParams.has('sort') || urlParams.has('page')) {
+                showProducts();
+            }
+        });
+    </script>
+</body>
+</html>

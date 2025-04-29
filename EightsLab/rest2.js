@@ -6,7 +6,7 @@ const store = require('./store');
 router.get('/', (req, res) => {
     const items = store.getAll();
     res.render('indexnew', {
-        title: 'AutoParts Store', // Замените на свою предметную область
+        title: 'AutoParts Store',
         items: items
     });
 });
@@ -23,7 +23,7 @@ router.post('/items', (req, res) => {
     try {
         const newItem = req.body;
         store.create(newItem);
-        res.status(201).redirect('/'); // Перенаправление после создания
+        res.status(201).redirect('/');
     } catch (error) {
         res.status(500).json({ error: 'Ошибка при создании записи' });
     }
@@ -34,7 +34,7 @@ router.put('/items/:id', (req, res) => {
     const id = req.params.id;
     const updatedItem = req.body;
     const success = store.update(id, updatedItem);
-    if (success) res.redirect('/'); // Перенаправление после обновления
+    if (success) res.redirect('/'); 
     else res.status(404).json({ error: 'Запись не найдена' });
 });
 
@@ -42,7 +42,7 @@ router.put('/items/:id', (req, res) => {
 router.delete('/items/:id', (req, res) => {
     const id = req.params.id;
     const success = store.remove(id);
-    if (success) res.redirect('/'); // Перенаправление после удаления
+    if (success) res.redirect('/'); 
     else res.status(404).json({ error: 'Запись не найдена' });
 });
 
